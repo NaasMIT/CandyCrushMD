@@ -3,7 +3,9 @@ package fr.amu.candycrush.core;
 import java.awt.Color;
 
 public class Candy {
+	
 	private boolean isMarked = false;
+	private Position postion;
 	private Color color;
 	
 	public Candy (Color color) {
@@ -24,5 +26,13 @@ public class Candy {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public Position getPostion() {
+		return postion;
+	}
+
+	public void setPostion(Position postion) {
+		this.postion = postion;
 	}
 }

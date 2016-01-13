@@ -7,7 +7,7 @@ public final class SingletonGrid {
 
 
 	private SingletonGrid() {
-		setCandyMatrix(new Candy [8][8]);	
+		setCandyMatrix(new Candy [8][8]);
 	}
 
 	private static SingletonGrid getInstance() {
