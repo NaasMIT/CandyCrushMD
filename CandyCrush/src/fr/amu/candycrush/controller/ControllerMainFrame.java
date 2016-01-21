@@ -26,7 +26,8 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 		listenViewComponent();
 
 		modelMainFrame.addObserver(viewMainFrame);
-
+		
+		modelMainFrame.notifyObs(SingletonGrid.getInstance());
 		new Thread(this).start();
 	}
 
@@ -41,7 +42,8 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 		listenViewComponent();
 
 		modelMainFrame.addObserver(viewMainFrame);
-		System.out.println("ControllerMainFrame.ControllerMainFrame()");
+		modelMainFrame.notifyObs(SingletonGrid.getInstance());
+		new Thread(this).start();
 	}
 
 
@@ -59,24 +61,28 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if(e.getSource() == viewMainFrame.getGamePanel())
-		{
-			// on bouge la souris : recuperer les coordonnees de la deuxieme case
-			if (viewMainFrame.getGamePanel().getSelectedX() != -1 && viewMainFrame.getGamePanel().getSelectedY() != -1) {
-				viewMainFrame.getGamePanel().setSelectedX(e.getX() / 32);
-				viewMainFrame.getGamePanel().setSelectedY(e.getY() / 32);
-				// si l'echange n'est pas valide, on cache la deuxieme case
-				if (!modelMainFrame.isValidSwap(viewMainFrame.getGamePanel().getSelectedX(), 
-						viewMainFrame.getGamePanel().getSelectedY(), 
-						viewMainFrame.getGamePanel().getSwappedX(), 
-						viewMainFrame.getGamePanel().getSwappedY())) {
-					viewMainFrame.getGamePanel().setSwappedX(-1);
-					viewMainFrame.getGamePanel().setSwappedY(-1);
-				}
-				
-				System.out.println(modelMainFrame.countObservers());
-				modelMainFrame.notifyObservers(SingletonGrid.getInstance());
+
+		// on bouge la souris : recuperer les coordonnees de la deuxieme case
+		System.err.println(viewMainFrame.getGamePanel().getSelectedX());
+		if (viewMainFrame.getGamePanel().getSelectedX() != -1 && 
+				viewMainFrame.getGamePanel().getSelectedY() != -1) {
+
+			System.out.println("getSeconde case");
+			viewMainFrame.getGamePanel().setSelectedX(e.getX() / 32);
+			viewMainFrame.getGamePanel().setSelectedY(e.getY() / 32);
+
+			// si l'echange n'est pas valide, on cache la deuxieme case
+			if (!modelMainFrame.isValidSwap(viewMainFrame.getGamePanel().getSelectedX(), 
+					viewMainFrame.getGamePanel().getSelectedY(), 
+					viewMainFrame.getGamePanel().getSwappedX(), 
+					viewMainFrame.getGamePanel().getSwappedY())) {
+
+				viewMainFrame.getGamePanel().setSwappedX(-1);
+				viewMainFrame.getGamePanel().setSwappedY(-1);
 			}
+
+			System.out.println(modelMainFrame.countObservers());
+			modelMainFrame.notifyObs(SingletonGrid.getInstance());
 		}
 	}
 
@@ -108,7 +114,7 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 			viewMainFrame.getGamePanel().setSelectedX(e.getX() / 32);
 			viewMainFrame.getGamePanel().setSelectedY(e.getY() / 32);
 
-			modelMainFrame.notifyObservers(SingletonGrid.getInstance());
+			modelMainFrame.notifyObs(SingletonGrid.getInstance());
 		}
 	}
 
@@ -134,7 +140,7 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 			viewMainFrame.getGamePanel().setSwappedX(-1);
 			viewMainFrame.getGamePanel().setSwappedY(-1);
 
-			modelMainFrame.notifyObservers(SingletonGrid.getInstance());
+			modelMainFrame.notifyObs(SingletonGrid.getInstance());
 		}
 	}
 
@@ -173,9 +179,7 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 				modelMainFrame.removeAlignments();
 			}
 
-			modelMainFrame.notifyObservers(SingletonGrid.getInstance());
-			// redessiner
-
+			modelMainFrame.notifyObs(SingletonGrid.getInstance());
 		}
 
 	}

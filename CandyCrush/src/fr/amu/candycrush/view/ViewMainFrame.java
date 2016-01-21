@@ -43,11 +43,9 @@ public class ViewMainFrame extends javax.swing.JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("update");
 		if(o instanceof ModelMainFrame){
 			if(arg instanceof SingletonGrid)
 			{
-				System.out.println("update model");
 				gamePanel.repaint();
 			}
 		}
