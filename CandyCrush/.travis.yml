@@ -1,8 +1,7 @@
-language: ruby
-rvm:
- - "1.8.7"
- - "1.9.2"
- - "1.9.3"
- - rbx
-# uncomment this line if your project needs to run something other than `rake`:
-# script: bundle exec rspec spec
+script:
+- echo "compiling main files" 
+- javac Test.java 
+- javac Code.java
+
+- echo "running test"
+- java -ea Test
