@@ -53,7 +53,6 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
 		mouseMoved(e);
 	}
 
@@ -66,8 +65,8 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 				viewMainFrame.getGamePanel().getSelectedY() != -1) {
 
 			System.out.println("getSeconde case");
-			viewMainFrame.getGamePanel().setSelectedX(e.getX() / 32);
-			viewMainFrame.getGamePanel().setSelectedY(e.getY() / 32);
+			viewMainFrame.getGamePanel().setSwappedX(e.getX() / 32);
+			viewMainFrame.getGamePanel().setSwappedY(e.getY() / 32);
 
 			// si l'echange n'est pas valide, on cache la deuxieme case
 			if (!modelMainFrame.isValidSwap(viewMainFrame.getGamePanel().getSelectedX(), 

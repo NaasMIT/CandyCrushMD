@@ -12,9 +12,11 @@ public class CandyAlgorithm implements IAlgorithm {
 	public boolean horizontalAligned(int i, int j) {
 		if (i < 0 || j < 0 || i >= 6 || j >= 8)
 			return false;
+		
 		if (SingletonGrid.getInstance().getCandyMatrix()[i][j].equals(SingletonGrid.getInstance().getCandyMatrix()[i + 1][j]) && 
 				SingletonGrid.getInstance().getCandyMatrix()[i][j].equals(SingletonGrid.getInstance().getCandyMatrix()[i + 2][j]))
 			return true;
+		
 		return false;
 	}
 
@@ -32,9 +34,9 @@ public class CandyAlgorithm implements IAlgorithm {
 
 	// echanger le contenu de deux cases
 	public void swap(int x1, int y1, int x2, int y2) {
-		Candy tmp = SingletonGrid.getInstance().getCandyMatrix()[x1][y1];
-		SingletonGrid.getInstance().getCandyMatrix()[x1][y1] = SingletonGrid.getInstance().getCandyMatrix()[x2][y2];
-		SingletonGrid.getInstance().getCandyMatrix()[x2][y2] = tmp;
+		Color tmp = SingletonGrid.getInstance().getCandyMatrix()[x1][y1].getColor();
+		SingletonGrid.getInstance().getCandyMatrix()[x1][y1].setColor(SingletonGrid.getInstance().getCandyMatrix()[x2][y2].getColor());
+		SingletonGrid.getInstance().getCandyMatrix()[x2][y2].setColor(tmp);
 	}
 
 	// determine si l'echange entre deux cases est valide
@@ -46,7 +48,7 @@ public class CandyAlgorithm implements IAlgorithm {
 		if (Math.abs(x2 - x1) + Math.abs(y2 - y1) != 1)
 			return false;
 		// et que les couleurs soient differentes
-		if (SingletonGrid.getInstance().getCandyMatrix()[x1][y1] == SingletonGrid.getInstance().getCandyMatrix()[x2][y2])
+		if (SingletonGrid.getInstance().getCandyMatrix()[x1][y1].equals(SingletonGrid.getInstance().getCandyMatrix()[x2][y2]))
 			return false;
 
 		// alors on effectue l'echange
@@ -72,12 +74,13 @@ public class CandyAlgorithm implements IAlgorithm {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				Candy currentCandy = SingletonGrid.getInstance().getCandyMatrix()[i][j];
+				
 				if (!currentCandy.getColor().equals(Color.WHITE) && horizontalAligned(i, j)) {
 					SingletonGrid.getInstance().getCandyMatrix()[i][j].setMarked(true);
 					SingletonGrid.getInstance().getCandyMatrix()[i+1][j].setMarked(true);
 					SingletonGrid.getInstance().getCandyMatrix()[i+2][j].setMarked(true);
 				}
-				if (SingletonGrid.getInstance().getCandyMatrix()[i][j].getColor().equals(Color.WHITE) &&
+				if (!SingletonGrid.getInstance().getCandyMatrix()[i][j].getColor().equals(Color.WHITE) &&
 						verticalAligned(i, j)) {
 					SingletonGrid.getInstance().getCandyMatrix()[i][j].setMarked(true);
 					SingletonGrid.getInstance().getCandyMatrix()[i][j+1].setMarked(true);
@@ -124,7 +127,7 @@ public boolean fill() {
 					Candy c = new Candy(colors[1 + rand.nextInt(colors.length - 1)]);
 					SingletonGrid.getInstance().getCandyMatrix()[i][j] = c;
 				} else {
-					SingletonGrid.getInstance().getCandyMatrix()[i][j] = SingletonGrid.getInstance().getCandyMatrix()[i][j - 1];
+					SingletonGrid.getInstance().getCandyMatrix()[i][j].setColor(SingletonGrid.getInstance().getCandyMatrix()[i][j - 1].getColor());;
 					SingletonGrid.getInstance().getCandyMatrix()[i][j - 1].setColor(Color.WHITE);
 				}
 				
