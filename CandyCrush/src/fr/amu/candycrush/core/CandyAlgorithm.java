@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.Random;
 
 public class CandyAlgorithm implements IAlgorithm {
-		
+
 	private Color colors[] = { Color.WHITE, Color.RED, Color.GREEN, Color.BLUE, Color.GRAY, Color.PINK, Color.CYAN };
 
 	// est-ce qu'on a trois cases de la meme couleur vers le droite depuis (i,
@@ -12,7 +12,8 @@ public class CandyAlgorithm implements IAlgorithm {
 	public boolean horizontalAligned(int i, int j) {
 		if (i < 0 || j < 0 || i >= 6 || j >= 8)
 			return false;
-		if (SingletonGrid.getInstance().getCandyMatrix()[i][j] == SingletonGrid.getInstance().getCandyMatrix()[i + 1][j] && SingletonGrid.getInstance().getCandyMatrix()[i][j] == SingletonGrid.getInstance().getCandyMatrix()[i + 2][j])
+		if (SingletonGrid.getInstance().getCandyMatrix()[i][j].equals(SingletonGrid.getInstance().getCandyMatrix()[i + 1][j]) && 
+				SingletonGrid.getInstance().getCandyMatrix()[i][j].equals(SingletonGrid.getInstance().getCandyMatrix()[i + 2][j]))
 			return true;
 		return false;
 	}
@@ -21,8 +22,11 @@ public class CandyAlgorithm implements IAlgorithm {
 	public boolean verticalAligned(int i, int j) {
 		if (i < 0 || j < 0 || i >= 8 || j >= 6)
 			return false;
-		if (SingletonGrid.getInstance().getCandyMatrix()[i][j] == SingletonGrid.getInstance().getCandyMatrix()[i][j + 1] && SingletonGrid.getInstance().getCandyMatrix()[i][j] == SingletonGrid.getInstance().getCandyMatrix()[i][j + 2])
+
+		if (SingletonGrid.getInstance().getCandyMatrix()[i][j].equals(SingletonGrid.getInstance().getCandyMatrix()[i][j + 1]) && 
+				SingletonGrid.getInstance().getCandyMatrix()[i][j].equals(SingletonGrid.getInstance().getCandyMatrix()[i][j + 2]))
 			return true;
+
 		return false;
 	}
 
@@ -68,12 +72,13 @@ public class CandyAlgorithm implements IAlgorithm {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				Candy currentCandy = SingletonGrid.getInstance().getCandyMatrix()[i][j];
-				if (currentCandy != null && horizontalAligned(i, j)) {
+				if (!currentCandy.getColor().equals(Color.WHITE) && horizontalAligned(i, j)) {
 					SingletonGrid.getInstance().getCandyMatrix()[i][j].setMarked(true);
 					SingletonGrid.getInstance().getCandyMatrix()[i+1][j].setMarked(true);
 					SingletonGrid.getInstance().getCandyMatrix()[i+2][j].setMarked(true);
 				}
-				if (SingletonGrid.getInstance().getCandyMatrix()[i][j] != null && verticalAligned(i, j)) {
+				if (SingletonGrid.getInstance().getCandyMatrix()[i][j].getColor().equals(Color.WHITE) &&
+						verticalAligned(i, j)) {
 					SingletonGrid.getInstance().getCandyMatrix()[i][j].setMarked(true);
 					SingletonGrid.getInstance().getCandyMatrix()[i][j+1].setMarked(true);
 					SingletonGrid.getInstance().getCandyMatrix()[i][j+2].setMarked(true);
@@ -85,8 +90,9 @@ public class CandyAlgorithm implements IAlgorithm {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				if (SingletonGrid.getInstance().getCandyMatrix()[i][j].isMarked()) {
-					SingletonGrid.getInstance().getCandyMatrix()[i][j] = null;
+					SingletonGrid.getInstance().getCandyMatrix()[i][j].setColor(Color.WHITE);
 					SingletonGrid.getInstance().getCandyMatrix()[i][j].setMarked(false);
+					
 					modified = true;
 				}
 			}
@@ -94,50 +100,64 @@ public class CandyAlgorithm implements IAlgorithm {
 		return modified;
 	}
 
-	// remplir les cases vides par gravite, et generer des cases aleatoirement
-	// par le haut
-	public boolean fill() {
+	public void initGrid() {
 		Random rand = new Random();
-		boolean modified = false;
+		
 		for (int i = 0; i < 8; i++) {
 			for (int j = 7; j >= 0; j--) {
-				if (SingletonGrid.getInstance().getCandyMatrix()[i][j] == null) {
-					if (j == 0)
-					{
-						Candy c = new Candy(colors[1 + rand.nextInt(colors.length - 1)]);
-						SingletonGrid.getInstance().getCandyMatrix()[i][j] = c;
-					} else {
-						SingletonGrid.getInstance().getCandyMatrix()[i][j] = SingletonGrid.getInstance().getCandyMatrix()[i][j - 1];
-						SingletonGrid.getInstance().getCandyMatrix()[i][j - 1] = null;
-					}
-					modified = true;
-				}
+				Candy c = new Candy(colors[1 + rand.nextInt(colors.length - 1)]);
+				SingletonGrid.getInstance().getCandyMatrix()[i][j] = c;
 			}
 		}
-		return modified;
 	}
 
-	@Override
-	public void terminate() {
-		// TODO Auto-generated method stub
-		
+// remplir les cases vides par gravite, et generer des cases aleatoirement
+// par le haut
+public boolean fill() {
+	Random rand = new Random();
+	boolean modified = false;
+	for (int i = 0; i < 8; i++) {
+		for (int j = 7; j >= 0; j--) {
+			if (SingletonGrid.getInstance().getCandyMatrix()[i][j].getColor().equals(Color.WHITE)) {
+				if (j == 0)
+				{
+					Candy c = new Candy(colors[1 + rand.nextInt(colors.length - 1)]);
+					SingletonGrid.getInstance().getCandyMatrix()[i][j] = c;
+				} else {
+					SingletonGrid.getInstance().getCandyMatrix()[i][j] = SingletonGrid.getInstance().getCandyMatrix()[i][j - 1];
+					SingletonGrid.getInstance().getCandyMatrix()[i][j - 1].setColor(Color.WHITE);
+				}
+				
+				modified = true;
+			}
+		}
 	}
+	return modified;
+}
 
-	@Override
-	public void init() {
-		// remplir une premiere fois la grille
-		while (fill())
-			;
-		// enlever les alignements existants
-		while (removeAlignments()) {
-			fill();
-		}		
-	}
+@Override
+public void terminate() {
+	// TODO Auto-generated method stub
 
-	@Override
-	public void compute() {
-		// TODO Auto-generated method stub
-		
-	}
+}
+
+@Override
+public void init() {
+	// remplir une premiere fois la grille
+	initGrid();
+	
+	while (fill())
+		;
+	// enlever les alignements existants
+	while (removeAlignments()) {
+		fill();
+	}		
+}
+
+@Override
+public void compute() {
+	// TODO Auto-generated method stub
+
+}
 
 }

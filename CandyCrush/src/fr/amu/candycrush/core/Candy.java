@@ -35,4 +35,10 @@ public class Candy {
 	public void setPostion(Position postion) {
 		this.postion = postion;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return ((Candy) obj).getColor().equals(getColor());
+	}
 }

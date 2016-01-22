@@ -26,7 +26,7 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 		listenViewComponent();
 
 		modelMainFrame.addObserver(viewMainFrame);
-		
+
 		modelMainFrame.notifyObs(SingletonGrid.getInstance());
 		new Thread(this).start();
 	}
@@ -36,8 +36,6 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 
 		modelMainFrame = new ModelMainFrame(candyAlgo);
 		viewMainFrame = new ViewMainFrame();
-
-		modelMainFrame.notifyObservers(SingletonGrid.getInstance());
 
 		listenViewComponent();
 
@@ -56,7 +54,7 @@ public class ControllerMainFrame implements ActionListener, MouseMotionListener,
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
-
+		mouseMoved(e);
 	}
 
 	@Override
